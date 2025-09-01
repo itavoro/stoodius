@@ -1,0 +1,34 @@
+@import 'tailwindcss';
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+@keyframes expandWidth {
+    0% {width: 1}
+    100% {width: 100vw}
+}
+
+#bg1 {
+    animation: expandWidth 1.5s ease-in-out forwards
+}
+
+#bg2 {
+    animation: expandWidth 1.5s ease-in-out forwards
+}
+
+#bg3 {
+    animation: expandWidth 1.5s ease-in-out forwards
+}
+
+#bg4 {
+    animation: expandWidth 1.5s ease-in-out forwards
+}
+
+#bg5 {
+    animation: expandWidth 1.5s ease-in-out forwards
+}
+
+body {
+    background-color: white;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+}
