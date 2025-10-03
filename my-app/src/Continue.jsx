@@ -50,6 +50,68 @@ function SignInForm (props) {
 }
 
 function SignUpForm (props) {
+    const [formData, setFormData] = useState({
+        email: '',
+        password: '',
+        confirmPassword: ''
+    });
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState('');
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError('');
+        
+        // Validation
+        if (formData.password !== formData.confirmPassword) {
+            setError('Passwords do not match');
+            return;
+        }
+        
+        if (formData.password.length < 6) {
+            setError('Password must be at least 6 characters');
+            return;
+        }
+
+        setIsLoading(true);
+        
+        try {
+            const response = await fetch('/api/auth/signup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: formData.email,
+                    password: formData.password
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                // Success - redirect or show success message
+                console.log('User created successfully:', data);
+                // You might want to redirect to dashboard or auto-login
+            } else {
+                // Handle error response
+                setError(data.message || 'Something went wrong');
+            }
+        } catch (err) {
+            setError('Network error. Please try again.');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     if (!props.isVisible) return null;
     
     return (
@@ -65,31 +127,51 @@ function SignUpForm (props) {
                 <h2 className="text-2xl font-light text-white mb-1">Join Stoodius</h2>
                 <p className="text-gray-400 text-sm">Create your account to get started</p>
             </div>
-            <div className="space-y-3">
+            <form onSubmit={handleSubmit} className="space-y-3">
                 <div className="relative">
                     <input 
+                        name="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
                         className="w-full bg-gray-800/50 text-white px-4 py-3 rounded-xl border border-gray-600/30 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 transition-all duration-200 backdrop-blur-sm" 
                         type="email" 
                         placeholder="Email address"
+                        required
                     />
                 </div>
                 <div className="relative">
                     <input 
+                        name="password"
+                        value={formData.password}
+                        onChange={handleInputChange}
                         className="w-full bg-gray-800/50 text-white px-4 py-3 rounded-xl border border-gray-600/30 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 transition-all duration-200 backdrop-blur-sm" 
                         type="password" 
                         placeholder="Password"
+                        required
                     />
                 </div>
                 <div className="relative">
                     <input 
+                        name="confirmPassword"
+                        value={formData.confirmPassword}
+                        onChange={handleInputChange}
                         className="w-full bg-gray-800/50 text-white px-4 py-3 rounded-xl border border-gray-600/30 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 transition-all duration-200 backdrop-blur-sm" 
                         type="password" 
                         placeholder="Confirm password"
+                        required
                     />
                 </div>
-            </div>
-            <button className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white font-medium px-4 py-3 rounded-xl transition-all duration-200 transform hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/25 mt-3">
-                Create Account
+                {error && (
+                    <div className="text-red-400 text-sm text-center bg-red-900/20 border border-red-500/30 rounded-lg px-3 py-2">
+                        {error}
+                    </div>
+                )}
+            </form>
+            <button 
+                type="submit"
+                disabled={isLoading}
+                className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white font-medium px-4 py-3 rounded-xl transition-all duration-200 transform hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/25 mt-3 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
+                {isLoading ? 'Creating Account...' : 'Create Account'}
             </button>
             <div className="text-center mt-3">
                 <p className="text-gray-400 text-xs mb-1">
