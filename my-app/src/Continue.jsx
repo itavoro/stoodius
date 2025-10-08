@@ -39,67 +39,6 @@ function SignInForm (props) {
                 <a href="#" className="text-cyan-400 hover:text-cyan-300 text-sm transition-colors duration-200 block mb-2">
                     Forgot your password?
                 </a>
-                <button 
-                    onClick={props.onSwitchToSignUp}
-                    className="text-cyan-400 hover:text-cyan-300 text-sm transition-colors duration-200 bg-transparent border-none cursor-pointer">
-                    Don't have an account? Sign up
-                </button>
-            </div>
-        </div>
-    )
-}
-
-function SignUpForm (props) {
-    if (!props.isVisible) return null;
-    
-    return (
-        <div style={{
-            opacity: props.isFadingIn ? '1' : '0',
-            transition: 'opacity 0.3s ease-out',
-            transform: 'translate(-50%, -50%)',
-            backdropFilter: 'blur(20px)',
-            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.05)'
-        }}
-        className="bg-gradient-to-br from-gray-900 via-black to-gray-900 flex flex-col w-[600px] gap-4 p-8 rounded-2xl absolute top-1/2 left-1/2 z-[60] border border-gray-700/30 cursor-auto">
-            <div className="text-center mb-1">
-                <h2 className="text-2xl font-light text-white mb-1">Join Stoodius</h2>
-                <p className="text-gray-400 text-sm">Create your account to get started</p>
-            </div>
-            <form className="space-y-3">
-                <div className="relative">
-                    <input 
-                        className="w-full bg-gray-800/50 text-white px-4 py-3 rounded-xl border border-gray-600/30 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 transition-all duration-200 backdrop-blur-sm" 
-                        type="email" 
-                        placeholder="Email address"
-                    />
-                </div>
-                <div className="relative">
-                    <input 
-                        className="w-full bg-gray-800/50 text-white px-4 py-3 rounded-xl border border-gray-600/30 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 transition-all duration-200 backdrop-blur-sm" 
-                        type="password" 
-                        placeholder="Password"
-                    />
-                </div>
-                <div className="relative">
-                    <input 
-                        className="w-full bg-gray-800/50 text-white px-4 py-3 rounded-xl border border-gray-600/30 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 transition-all duration-200 backdrop-blur-sm" 
-                        type="password" 
-                        placeholder="Confirm password"
-                    />
-                </div>
-            </form>
-            <button className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white font-medium px-4 py-3 rounded-xl transition-all duration-200 transform hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/25 mt-3">
-                Create Account
-            </button>
-            <div className="text-center mt-3">
-                <p className="text-gray-400 text-xs mb-1">
-                    By signing up, you agree to our Terms of Service and Privacy Policy
-                </p>
-                <button 
-                    onClick={props.onSwitchToSignIn}
-                    className="text-cyan-400 hover:text-cyan-300 text-sm transition-colors duration-200 bg-transparent border-none cursor-pointer">
-                    Already have an account? Sign in
-                </button>
             </div>
         </div>
     )
