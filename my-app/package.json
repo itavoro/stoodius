@@ -7,12 +7,18 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "server": "cd server && npm start",
+    "server:dev": "cd server && npm run dev",
+    "start": "concurrently \"npm run dev\" \"npm run server:dev\" --names \"FRONTEND,BACKEND\" --prefix-colors \"cyan,green\""
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.12",
+    "axios": "^1.12.2",
+    "concurrently": "^9.2.1",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
+    "react-router-dom": "^7.9.4",
     "tailwindcss": "^4.1.12"
   },
   "devDependencies": {

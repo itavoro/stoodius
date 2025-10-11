@@ -1,7 +1,67 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 function SignUpForm (props) {
+    const navigate = useNavigate();
+    const [formData, setFormData] = useState({
+        fullName: '',
+        email: '',
+        password: '',
+        confirmPassword: ''
+    });
+    const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
+
     if (!props.isVisible) return null;
+
+    const handleChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value
+        });
+        setError('');
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError('');
+
+        // Validation
+        if (!formData.fullName || !formData.email || !formData.password || !formData.confirmPassword) {
+            setError('Please fill in all fields');
+            return;
+        }
+
+        if (formData.password !== formData.confirmPassword) {
+            setError('Passwords do not match');
+            return;
+        }
+
+        if (formData.password.length < 6) {
+            setError('Password must be at least 6 characters long');
+            return;
+        }
+
+        setLoading(true);
+
+        try {
+            const response = await axios.post('http://localhost:5000/api/auth/signup', {
+                fullName: formData.fullName,
+                email: formData.email,
+                password: formData.password
+            });
+
+            if (response.data.success) {
+                localStorage.setItem('token', response.data.token);
+                navigate('/dashboard');
+            }
+        } catch (err) {
+            setError(err.response?.data?.message || 'Failed to create account. Please try again.');
+        } finally {
+            setLoading(false);
+        }
+    };
     
     return (
         <div style={{
@@ -16,39 +76,63 @@ function SignUpForm (props) {
                 <h2 className="text-2xl font-light text-white mb-1">Create Account</h2>
                 <p className="text-gray-400 text-sm">Join Stoodius and start studying together</p>
             </div>
-            <div className="space-y-3">
+            {error && (
+                <div className="bg-red-500/20 border border-red-500/50 text-red-200 px-4 py-3 rounded-xl text-sm">
+                    {error}
+                </div>
+            )}
+            <form onSubmit={handleSubmit} className="space-y-3">
                 <div className="relative">
                     <input 
                         className="w-full bg-gray-800/50 text-white px-4 py-3 rounded-xl border border-gray-600/30 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 transition-all duration-200 backdrop-blur-sm" 
                         type="text" 
+                        name="fullName"
+                        value={formData.fullName}
+                        onChange={handleChange}
                         placeholder="Full name"
+                        disabled={loading}
                     />
                 </div>
                 <div className="relative">
                     <input 
                         className="w-full bg-gray-800/50 text-white px-4 py-3 rounded-xl border border-gray-600/30 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 transition-all duration-200 backdrop-blur-sm" 
                         type="email" 
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
                         placeholder="Email address"
+                        disabled={loading}
                     />
                 </div>
                 <div className="relative">
                     <input 
                         className="w-full bg-gray-800/50 text-white px-4 py-3 rounded-xl border border-gray-600/30 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 transition-all duration-200 backdrop-blur-sm" 
                         type="password" 
+                        name="password"
+                        value={formData.password}
+                        onChange={handleChange}
                         placeholder="Password"
+                        disabled={loading}
                     />
                 </div>
                 <div className="relative">
                     <input 
                         className="w-full bg-gray-800/50 text-white px-4 py-3 rounded-xl border border-gray-600/30 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 transition-all duration-200 backdrop-blur-sm" 
                         type="password" 
+                        name="confirmPassword"
+                        value={formData.confirmPassword}
+                        onChange={handleChange}
                         placeholder="Confirm password"
+                        disabled={loading}
                     />
                 </div>
-            </div>
-            <button className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white font-medium px-4 py-3 rounded-xl transition-all duration-200 transform hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/25 mt-3">
-                Sign Up
-            </button>
+                <button 
+                    type="submit"
+                    disabled={loading}
+                    className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white font-medium px-4 py-3 rounded-xl transition-all duration-200 transform hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/25 mt-3 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
+                    {loading ? 'Creating Account...' : 'Sign Up'}
+                </button>
+            </form>
             <div className="text-center mt-3">
                 <p className="text-gray-400 text-sm">
                     Already have an account?{' '}
@@ -62,7 +146,52 @@ function SignUpForm (props) {
 }
 
 function SignInForm (props) {
+    const navigate = useNavigate();
+    const [formData, setFormData] = useState({
+        email: '',
+        password: ''
+    });
+    const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
+
     if (!props.isVisible) return null;
+
+    const handleChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value
+        });
+        setError('');
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError('');
+
+        // Validation
+        if (!formData.email || !formData.password) {
+            setError('Please fill in all fields');
+            return;
+        }
+
+        setLoading(true);
+
+        try {
+            const response = await axios.post('http://localhost:5000/api/auth/signin', {
+                email: formData.email,
+                password: formData.password
+            });
+
+            if (response.data.success) {
+                localStorage.setItem('token', response.data.token);
+                navigate('/dashboard');
+            }
+        } catch (err) {
+            setError(err.response?.data?.message || 'Failed to sign in. Please try again.');
+        } finally {
+            setLoading(false);
+        }
+    };
     
     return (
         <div style={{
@@ -77,25 +206,41 @@ function SignInForm (props) {
                 <h2 className="text-2xl font-light text-white mb-1">Welcome Back</h2>
                 <p className="text-gray-400 text-sm">Sign in to your Stoodius account</p>
             </div>
-            <div className="space-y-3">
+            {error && (
+                <div className="bg-red-500/20 border border-red-500/50 text-red-200 px-4 py-3 rounded-xl text-sm">
+                    {error}
+                </div>
+            )}
+            <form onSubmit={handleSubmit} className="space-y-3">
                 <div className="relative">
                     <input 
                         className="w-full bg-gray-800/50 text-white px-4 py-3 rounded-xl border border-gray-600/30 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 transition-all duration-200 backdrop-blur-sm" 
                         type="email" 
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
                         placeholder="Email address"
+                        disabled={loading}
                     />
                 </div>
                 <div className="relative">
                     <input 
                         className="w-full bg-gray-800/50 text-white px-4 py-3 rounded-xl border border-gray-600/30 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 transition-all duration-200 backdrop-blur-sm" 
                         type="password" 
+                        name="password"
+                        value={formData.password}
+                        onChange={handleChange}
                         placeholder="Password"
+                        disabled={loading}
                     />
                 </div>
-            </div>
-            <button className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white font-medium px-4 py-3 rounded-xl transition-all duration-200 transform hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/25 mt-3">
-                Sign In
-            </button>
+                <button 
+                    type="submit"
+                    disabled={loading}
+                    className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white font-medium px-4 py-3 rounded-xl transition-all duration-200 transform hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/25 mt-3 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
+                    {loading ? 'Signing In...' : 'Sign In'}
+                </button>
+            </form>
             <div className="text-center mt-3">
                 <a href="#" className="text-cyan-400 hover:text-cyan-300 text-sm transition-colors duration-200 block mb-2">
                     Forgot your password?
