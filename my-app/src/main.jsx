@@ -5,6 +5,8 @@ import './index.css'
 import Welcome from './Welcome.jsx'
 import Continue from './Continue.jsx'
 import Dashboard from './Dashboard.jsx'
+import Rooms from './Rooms.jsx'
+import Room from './Room.jsx'
 
 function Home() {
   return (
@@ -21,6 +23,8 @@ createRoot(document.getElementById('root')).render(
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/rooms" element={<Rooms />} />
+        <Route path="/room/:roomId" element={<Room />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>,

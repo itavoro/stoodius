@@ -109,17 +109,22 @@ export default function Dashboard() {
                         </div>
                         
                         <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <div className="border border-cyan-400/30 rounded-xl p-6 hover:border-cyan-400/60 transition-all hover:shadow-lg hover:shadow-cyan-500/20">
+                            <button 
+                                onClick={() => navigate('/rooms')}
+                                className="border border-cyan-400/30 rounded-xl p-6 hover:border-cyan-400/60 transition-all hover:shadow-lg hover:shadow-cyan-500/20 cursor-pointer hover:scale-105 transform duration-200 bg-transparent text-left">
                                 <h3 className="text-xl text-cyan-400 mb-2">Study Rooms</h3>
                                 <p className="text-gray-400 text-sm">Create or join study rooms</p>
-                            </div>
-                            <div className="border border-cyan-400/30 rounded-xl p-6 hover:border-cyan-400/60 transition-all hover:shadow-lg hover:shadow-cyan-500/20">
+                                <p className="text-cyan-300 text-xs mt-3">Click to enter →</p>
+                            </button>
+                            <div className="border border-cyan-400/30 rounded-xl p-6 hover:border-cyan-400/60 transition-all hover:shadow-lg hover:shadow-cyan-500/20 opacity-50">
                                 <h3 className="text-xl text-cyan-400 mb-2">Pomodoro Timer</h3>
                                 <p className="text-gray-400 text-sm">Boost your productivity</p>
+                                <p className="text-gray-500 text-xs mt-3">Coming soon</p>
                             </div>
-                            <div className="border border-cyan-400/30 rounded-xl p-6 hover:border-cyan-400/60 transition-all hover:shadow-lg hover:shadow-cyan-500/20">
+                            <div className="border border-cyan-400/30 rounded-xl p-6 hover:border-cyan-400/60 transition-all hover:shadow-lg hover:shadow-cyan-500/20 opacity-50">
                                 <h3 className="text-xl text-cyan-400 mb-2">Shared Notes</h3>
                                 <p className="text-gray-400 text-sm">Access your study materials</p>
+                                <p className="text-gray-500 text-xs mt-3">Coming soon</p>
                             </div>
                         </div>
                     </div>
